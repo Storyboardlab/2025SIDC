@@ -10,8 +10,8 @@ def get_worksheet(tab_name):
         'https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive',
     ]
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(
-    st.secrets["gcp_service_account"], scope
+    service_account_info = st.secrets["gcp_service_account"]
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
     )
     client = gspread.authorize(creds)
     SPREADSHEET_NAME = '1fN2MkfDK2F_mnYv-7S_YjEHaPlMBdGVL_X_EtNHSItg'
