@@ -5,6 +5,7 @@ import re
 import json
 
 # Google Sheets setup
+@st.cache_resource(ttl=60)
 def get_worksheet(tab_name):
     scope = [
         'https://spreadsheets.google.com/feeds',
@@ -18,6 +19,11 @@ def get_worksheet(tab_name):
     sheet = client.open_by_key(SPREADSHEET_NAME)
     return sheet.worksheet(tab_name)
 
+@st.cache_data(ttl=60)
+def get_cell_range(tab_name, cell_range):
+    worksheet = get_worksheet(tab_name)
+    return worksheet.range(cell_range)
+    
 # Date and range mapping for each tab
 date_range_map = [
     ("7/11(금)", "G11:G41"),
@@ -37,7 +43,7 @@ date_range_map = [
 def find_dates(worksheet, name, date_ranges):
     found = []
     for date_label, cell_range in date_ranges:
-        cell_list = worksheet.range(cell_range)
+        cell_list = get_cell_range(worksheet.title, cell_range)
         for cell in cell_list:
             if cell.value and re.search(re.escape(name), cell.value, re.IGNORECASE):
                 found.append(date_label)
