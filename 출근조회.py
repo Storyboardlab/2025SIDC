@@ -9,7 +9,20 @@ def get_worksheet(tab_name):
         'https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive',
     ]
-    creds = ServiceAccountCredentials.from_json_keyfile_name('service_account.json', scope)
+    service_account_info = {
+        "type": st.secrets["type"],
+        "project_id": st.secrets["project_id"],
+        "private_key_id": st.secrets["private_key_id"],
+        "private_key": st.secrets["private_key"],
+        "client_email": st.secrets["client_email"],
+        "client_id": st.secrets["client_id"],
+        "auth_uri": st.secrets["auth_uri"],
+        "token_uri": st.secrets["token_uri"],
+        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+        "client_x509_cert_url": st.secrets["client_x509_cert_url"],
+        "universe_domain": st.secrets["universe_domain"]
+    }
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
     client = gspread.authorize(creds)
     SPREADSHEET_NAME = '1fN2MkfDK2F_mnYv-7S_YjEHaPlMBdGVL_X_EtNHSItg'
     sheet = client.open_by_key(SPREADSHEET_NAME)
